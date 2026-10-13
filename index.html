@@ -1,0 +1,1559 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Space Exploration Quiz</title>
+  <style>
+    :root {
+      --bg-gradient: radial-gradient(circle at 50% 10%, #111827 0%, #080d1a 60%, #030712 100%);
+      --card-bg: rgba(15, 23, 42, 0.95);
+      --card-border: rgba(56, 189, 248, 0.3);
+      --card-bezel: #1e293b;
+      --card-shadow: 0 16px 50px rgba(0, 0, 0, 0.65), 0 0 24px rgba(56, 189, 248, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-telemetry: #38bdf8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --hud-bracket: #38bdf8;
+      --status-beacon: #10b981;
+      --opt-bg: rgba(30, 41, 59, 0.75);
+      --opt-border: rgba(148, 163, 184, 0.22);
+      --opt-hover-bg: rgba(51, 65, 85, 0.9);
+      --opt-hover-border: rgba(56, 189, 248, 0.6);
+      --correct-bg: #064e3b;
+      --correct-border: #10b981;
+      --correct-text: #ecfdf5;
+      --correct-glow: rgba(16, 185, 129, 0.45);
+      --wrong-bg: #7f1d1d;
+      --wrong-border: #ef4444;
+      --wrong-text: #fef2f2;
+      --wrong-glow: rgba(239, 68, 68, 0.45);
+      --progress-track: rgba(15, 23, 42, 0.85);
+      --progress-fill: linear-gradient(90deg, #0284c7, #38bdf8);
+      --tag-bg: rgba(56, 189, 248, 0.15);
+      --tag-text: #7dd3fc;
+      --terminal-font: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, "Liberation Mono", monospace;
+    }
+
+    @media (prefers-color-scheme: light) {
+      :root {
+        --bg-gradient: radial-gradient(circle at 50% 10%, #e2e8f0 0%, #cbd5e1 60%, #94a3b8 100%);
+        --card-bg: rgba(255, 255, 255, 0.98);
+        --card-border: rgba(2, 132, 199, 0.45);
+        --card-bezel: #f1f5f9;
+        --card-shadow: 0 14px 40px rgba(15, 23, 42, 0.15), 0 0 16px rgba(2, 132, 199, 0.12), inset 0 1px 0 rgba(255, 255, 255, 1);
+        --text-main: #0f172a;
+        --text-muted: #475569;
+        --text-telemetry: #0369a1;
+        --accent: #0284c7;
+        --accent-glow: rgba(2, 132, 199, 0.28);
+        --hud-bracket: #0284c7;
+        --status-beacon: #059669;
+        --opt-bg: #f8fafc;
+        --opt-border: #cbd5e1;
+        --opt-hover-bg: #f0f9ff;
+        --opt-hover-border: #0284c7;
+        --correct-bg: #d1fae5;
+        --correct-border: #059669;
+        --correct-text: #065f46;
+        --correct-glow: rgba(16, 185, 129, 0.3);
+        --wrong-bg: #fee2e2;
+        --wrong-border: #dc2626;
+        --wrong-text: #991b1b;
+        --wrong-glow: rgba(239, 68, 68, 0.3);
+        --progress-track: #e2e8f0;
+        --progress-fill: linear-gradient(90deg, #0284c7, #38bdf8);
+        --tag-bg: #e0f2fe;
+        --tag-text: #0369a1;
+      }
+    }
+
+    /* Support manual theme toggle override */
+    body.theme-dark {
+      --bg-gradient: radial-gradient(circle at 50% 10%, #111827 0%, #080d1a 60%, #030712 100%);
+      --card-bg: rgba(15, 23, 42, 0.95);
+      --card-border: rgba(56, 189, 248, 0.3);
+      --card-bezel: #1e293b;
+      --card-shadow: 0 16px 50px rgba(0, 0, 0, 0.65), 0 0 24px rgba(56, 189, 248, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --text-telemetry: #38bdf8;
+      --accent: #38bdf8;
+      --accent-glow: rgba(56, 189, 248, 0.35);
+      --hud-bracket: #38bdf8;
+      --status-beacon: #10b981;
+      --opt-bg: rgba(30, 41, 59, 0.75);
+      --opt-border: rgba(148, 163, 184, 0.22);
+      --opt-hover-bg: rgba(51, 65, 85, 0.9);
+      --opt-hover-border: rgba(56, 189, 248, 0.6);
+      --correct-bg: #064e3b;
+      --correct-border: #10b981;
+      --correct-text: #ecfdf5;
+      --correct-glow: rgba(16, 185, 129, 0.45);
+      --wrong-bg: #7f1d1d;
+      --wrong-border: #ef4444;
+      --wrong-text: #fef2f2;
+      --wrong-glow: rgba(239, 68, 68, 0.45);
+      --progress-track: rgba(15, 23, 42, 0.85);
+      --progress-fill: linear-gradient(90deg, #0284c7, #38bdf8);
+      --tag-bg: rgba(56, 189, 248, 0.15);
+      --tag-text: #7dd3fc;
+    }
+
+    body.theme-light {
+      --bg-gradient: radial-gradient(circle at 50% 10%, #e2e8f0 0%, #cbd5e1 60%, #94a3b8 100%);
+      --card-bg: rgba(255, 255, 255, 0.98);
+      --card-border: rgba(2, 132, 199, 0.45);
+      --card-bezel: #f1f5f9;
+      --card-shadow: 0 14px 40px rgba(15, 23, 42, 0.15), 0 0 16px rgba(2, 132, 199, 0.12), inset 0 1px 0 rgba(255, 255, 255, 1);
+      --text-main: #0f172a;
+      --text-muted: #475569;
+      --text-telemetry: #0369a1;
+      --accent: #0284c7;
+      --accent-glow: rgba(2, 132, 199, 0.28);
+      --hud-bracket: #0284c7;
+      --status-beacon: #059669;
+      --opt-bg: #f8fafc;
+      --opt-border: #cbd5e1;
+      --opt-hover-bg: #f0f9ff;
+      --opt-hover-border: #0284c7;
+      --correct-bg: #d1fae5;
+      --correct-border: #059669;
+      --correct-text: #065f46;
+      --correct-glow: rgba(16, 185, 129, 0.3);
+      --wrong-bg: #fee2e2;
+      --wrong-border: #dc2626;
+      --wrong-text: #991b1b;
+      --wrong-glow: rgba(239, 68, 68, 0.3);
+      --progress-track: #e2e8f0;
+      --progress-fill: linear-gradient(90deg, #0284c7, #38bdf8);
+      --tag-bg: #e0f2fe;
+      --tag-text: #0369a1;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      font-size: 15px;
+      line-height: 1.5;
+      color: var(--text-main);
+      background: var(--bg-gradient);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Star-Field Canvas Background */
+    #starsCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Celebration Canvas for Score >= 8 */
+    #celebrationCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 99;
+      display: none;
+    }
+
+    /* Subtle background glow */
+    body::before {
+      content: "";
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: 
+        radial-gradient(1px 1px at 20px 30px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 100px 150px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 230px 220px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(1.5px 1.5px at 340px 90px, #93c5fd, rgba(0,0,0,0)),
+        radial-gradient(1px 1px at 450px 300px, #ffffff, rgba(0,0,0,0)),
+        radial-gradient(2px 2px at 180px 420px, #fbcfe8, rgba(0,0,0,0));
+      background-repeat: repeat;
+      background-size: 500px 500px;
+      opacity: 0.25;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    /* Container: Centered narrow column with Mission Control HUD styling */
+    .quiz-container {
+      position: relative;
+      z-index: 1;
+      width: 100%;
+      max-width: 500px;
+      background: var(--card-bg);
+      background-image: 
+        linear-gradient(rgba(56, 189, 248, 0.03) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(56, 189, 248, 0.03) 1px, transparent 1px);
+      background-size: 24px 24px;
+      border: 1.5px solid var(--card-border);
+      border-radius: 12px;
+      box-shadow: var(--card-shadow);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      padding: 22px 24px 24px 24px;
+      transition: all 0.3s ease;
+      overflow: hidden;
+    }
+
+    /* Mission Control Bezel Corners (HUD targeting brackets) */
+    .quiz-container::before,
+    .quiz-container::after {
+      content: "";
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .quiz-container::before {
+      top: 6px;
+      left: 6px;
+      border-top: 2px solid var(--hud-bracket);
+      border-left: 2px solid var(--hud-bracket);
+    }
+
+    .quiz-container::after {
+      bottom: 6px;
+      right: 6px;
+      border-bottom: 2px solid var(--hud-bracket);
+      border-right: 2px solid var(--hud-bracket);
+    }
+
+    .hud-bracket-tr,
+    .hud-bracket-bl {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      pointer-events: none;
+      z-index: 3;
+    }
+
+    .hud-bracket-tr {
+      top: 6px;
+      right: 6px;
+      border-top: 2px solid var(--hud-bracket);
+      border-right: 2px solid var(--hud-bracket);
+    }
+
+    .hud-bracket-bl {
+      bottom: 6px;
+      left: 6px;
+      border-bottom: 2px solid var(--hud-bracket);
+      border-left: 2px solid var(--hud-bracket);
+    }
+
+    /* Mission Control Telemetry Top Bar */
+    .telemetry-banner {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 12px;
+      margin-bottom: 14px;
+      border-bottom: 1px solid var(--opt-border);
+      font-family: var(--terminal-font);
+      font-size: 11px;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-telemetry);
+    }
+
+    .telemetry-status {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 700;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 50%;
+      background: var(--status-beacon);
+      box-shadow: 0 0 8px var(--status-beacon);
+      animation: pulseBeacon 2s infinite;
+    }
+
+    @keyframes pulseBeacon {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.4; transform: scale(0.85); }
+    }
+
+    .telemetry-code {
+      color: var(--text-muted);
+      font-size: 10.5px;
+      font-weight: 600;
+    }
+
+    /* Header with title and controls */
+    .quiz-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-icon {
+      font-size: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 36px;
+      height: 36px;
+      border-radius: 8px;
+      background: var(--opt-bg);
+      border: 1px solid var(--opt-border);
+      box-shadow: inset 0 0 8px var(--accent-glow);
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-2px); }
+    }
+
+    .brand-meta {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .brand-title {
+      font-size: 16.5px;
+      font-weight: 800;
+      letter-spacing: 0.03em;
+      text-transform: uppercase;
+      font-family: var(--terminal-font);
+      color: var(--text-main);
+    }
+
+    .brand-subtitle {
+      font-size: 11px;
+      font-family: var(--terminal-font);
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    .theme-toggle-btn {
+      background: var(--opt-bg);
+      border: 1px solid var(--opt-border);
+      color: var(--text-muted);
+      border-radius: 6px;
+      padding: 6px 11px;
+      font-size: 12px;
+      font-family: var(--terminal-font);
+      font-weight: 600;
+      letter-spacing: 0.03em;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.2s ease;
+    }
+
+    .theme-toggle-btn:hover {
+      color: var(--text-main);
+      border-color: var(--accent);
+      box-shadow: 0 0 10px var(--accent-glow);
+    }
+
+    .theme-toggle-btn:focus-visible {
+      outline: 2px solid var(--accent);
+      outline-offset: 2px;
+    }
+
+    /* Stats bar: progress info & score */
+    .stats-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12.5px;
+      font-family: var(--terminal-font);
+      color: var(--text-muted);
+      margin-bottom: 8px;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+    }
+
+    .badge-q-count {
+      display: inline-flex;
+      align-items: center;
+      gap: 5px;
+      color: var(--text-telemetry);
+    }
+
+    .badge-score {
+      background: var(--tag-bg);
+      color: var(--tag-text);
+      border: 1px solid var(--card-border);
+      padding: 3px 10px;
+      border-radius: 6px;
+      font-weight: 700;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 0.2s ease;
+    }
+
+    .badge-score.pop {
+      animation: pop 0.35s ease;
+    }
+
+    @keyframes pop {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.18); box-shadow: 0 0 14px var(--accent-glow); }
+      100% { transform: scale(1); }
+    }
+
+    /* High-Tech Progress bar */
+    .progress-wrapper {
+      margin-bottom: 20px;
+    }
+
+    .progress-track {
+      width: 100%;
+      height: 8px;
+      background: var(--progress-track);
+      border: 1px solid var(--opt-border);
+      border-radius: 4px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .progress-fill {
+      height: 100%;
+      width: 0%;
+      background: var(--progress-fill);
+      border-radius: 2px;
+      box-shadow: 0 0 10px var(--accent-glow);
+      transition: width 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    .progress-ticks {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 4px;
+      padding: 0 2px;
+      font-family: var(--terminal-font);
+      font-size: 9.5px;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* Question section */
+    .question-section {
+      margin-bottom: 18px;
+      padding: 12px 14px;
+      background: rgba(125, 125, 125, 0.04);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+    }
+
+    .question-category {
+      display: inline-block;
+      font-family: var(--terminal-font);
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--text-telemetry);
+      margin-bottom: 6px;
+    }
+
+    .question-text {
+      font-size: 16.5px;
+      font-weight: 600;
+      line-height: 1.45;
+      color: var(--text-main);
+      letter-spacing: -0.01em;
+    }
+
+    /* Options list */
+    .options-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 18px;
+    }
+
+    .option-btn {
+      width: 100%;
+      background: var(--opt-bg);
+      border: 1.5px solid var(--opt-border);
+      border-radius: 8px;
+      padding: 12px 15px;
+      color: var(--text-main);
+      font-size: 14.5px;
+      font-family: inherit;
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+      user-select: none;
+    }
+
+    .option-content {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .option-letter {
+      width: 26px;
+      height: 26px;
+      border-radius: 4px;
+      background: rgba(125, 125, 125, 0.15);
+      border: 1px solid var(--opt-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--terminal-font);
+      font-weight: 700;
+      font-size: 12px;
+      color: var(--text-telemetry);
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .option-text {
+      font-weight: 500;
+      flex: 1;
+    }
+
+    .option-indicator {
+      font-family: var(--terminal-font);
+      font-weight: 700;
+      font-size: 14px;
+      opacity: 0;
+      transform: scale(0.6);
+      transition: all 0.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Hover states (only when enabled) */
+    .option-btn:hover:not(:disabled) {
+      background: var(--opt-hover-bg);
+      border-color: var(--opt-hover-border);
+      transform: translateX(3px);
+      box-shadow: 0 0 12px var(--accent-glow);
+    }
+
+    .option-btn:hover:not(:disabled) .option-letter {
+      background: var(--accent);
+      color: #ffffff;
+      border-color: var(--accent);
+    }
+
+    /* Rigorous Keyboard Focus States */
+    :focus-visible {
+      outline: 2px solid var(--accent) !important;
+      outline-offset: 3px !important;
+      box-shadow: 0 0 0 4px var(--accent-glow) !important;
+    }
+
+    .option-btn:focus-visible {
+      background: var(--opt-hover-bg);
+      border-color: var(--accent);
+      transform: translateX(3px);
+    }
+
+    /* Selected Correct Feedback */
+    .option-btn.correct {
+      background: var(--correct-bg) !important;
+      border-color: var(--correct-border) !important;
+      color: var(--correct-text) !important;
+      box-shadow: 0 0 18px var(--correct-glow);
+      animation: popGreen 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    .option-btn.correct .option-letter {
+      background: var(--correct-border);
+      color: #ffffff;
+      border-color: var(--correct-border);
+    }
+
+    .option-btn.correct .option-indicator {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    @keyframes popGreen {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.025); }
+      100% { transform: scale(1); }
+    }
+
+    /* Selected Wrong Feedback with Shake */
+    .option-btn.wrong {
+      background: var(--wrong-bg) !important;
+      border-color: var(--wrong-border) !important;
+      color: var(--wrong-text) !important;
+      box-shadow: 0 0 18px var(--wrong-glow);
+      animation: shake 0.45s cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+    }
+
+    .option-btn.wrong .option-letter {
+      background: var(--wrong-border);
+      color: #ffffff;
+      border-color: var(--wrong-border);
+    }
+
+    .option-btn.wrong .option-indicator {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    @keyframes shake {
+      10%, 90% { transform: translate3d(-3px, 0, 0); }
+      20%, 80% { transform: translate3d(5px, 0, 0); }
+      30%, 50%, 70% { transform: translate3d(-6px, 0, 0); }
+      40%, 60% { transform: translate3d(6px, 0, 0); }
+    }
+
+    /* Disabled state after an option is clicked */
+    .option-btn:disabled {
+      cursor: default;
+      pointer-events: none;
+    }
+
+    /* Feedback Banner & Explanation */
+    .feedback-banner {
+      display: none;
+      padding: 12px 14px;
+      border-radius: 8px;
+      margin-bottom: 14px;
+      font-size: 13.5px;
+      line-height: 1.45;
+      animation: fadeIn 0.25s ease;
+    }
+
+    .feedback-banner.correct-banner {
+      display: block;
+      background: rgba(16, 185, 129, 0.15);
+      border: 1px solid rgba(16, 185, 129, 0.45);
+      color: var(--text-main);
+    }
+
+    .feedback-banner.wrong-banner {
+      display: block;
+      background: rgba(239, 68, 68, 0.15);
+      border: 1px solid rgba(239, 68, 68, 0.45);
+      color: var(--text-main);
+    }
+
+    .feedback-header {
+      font-weight: 700;
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--terminal-font);
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .feedback-desc {
+      color: var(--text-muted);
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Next Question Button */
+    .actions-row {
+      display: flex;
+      justify-content: flex-end;
+    }
+
+    .next-btn {
+      display: none;
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 11px 20px;
+      font-size: 14px;
+      font-weight: 700;
+      font-family: var(--terminal-font);
+      letter-spacing: 0.04em;
+      cursor: pointer;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all 0.2s ease;
+    }
+
+    .next-btn:hover {
+      opacity: 0.94;
+      transform: translateY(-1px);
+    }
+
+    /* Results Screen */
+    .results-screen {
+      display: none;
+      text-align: center;
+      animation: fadeIn 0.4s ease;
+    }
+
+    .reaction-emoji {
+      font-size: 64px;
+      margin-bottom: 10px;
+      display: inline-block;
+      animation: bounceReaction 1s infinite alternate cubic-bezier(0.28, 0.84, 0.42, 1);
+    }
+
+    @keyframes bounceReaction {
+      0% { transform: translateY(0) scale(1); }
+      100% { transform: translateY(-8px) scale(1.05); }
+    }
+
+    /* Celebratory Banner for Score >= 8 */
+    .celebration-banner {
+      display: none;
+      background: linear-gradient(135deg, rgba(251, 191, 36, 0.18), rgba(56, 189, 248, 0.2));
+      border: 1.5px solid var(--gold);
+      border-radius: 8px;
+      padding: 10px 14px;
+      margin-bottom: 16px;
+      color: var(--text-main);
+      box-shadow: 0 0 18px var(--gold-glow);
+      animation: celebrationPulse 2.5s infinite alternate;
+    }
+
+    @keyframes celebrationPulse {
+      0% { box-shadow: 0 0 14px var(--gold-glow); }
+      100% { box-shadow: 0 0 28px var(--gold-glow), 0 0 8px rgba(56, 189, 248, 0.4); }
+    }
+
+    .celebration-badge-title {
+      font-family: var(--terminal-font);
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      color: var(--gold);
+      text-transform: uppercase;
+      margin-bottom: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+    }
+
+    .celebration-badge-desc {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-main);
+    }
+
+    .results-title {
+      font-size: 21px;
+      font-weight: 800;
+      margin-bottom: 4px;
+      letter-spacing: -0.01em;
+      font-family: var(--terminal-font);
+      text-transform: uppercase;
+    }
+
+    .results-subtitle {
+      font-size: 13.5px;
+      color: var(--text-muted);
+      margin-bottom: 18px;
+    }
+
+    .score-summary-card {
+      background: var(--opt-bg);
+      border: 1px solid var(--opt-border);
+      border-radius: 10px;
+      padding: 16px;
+      margin-bottom: 20px;
+      position: relative;
+    }
+
+    .score-summary-card.celebration-card {
+      border-color: var(--gold);
+      box-shadow: 0 0 20px var(--gold-glow);
+    }
+
+    .score-big {
+      font-size: 38px;
+      font-weight: 900;
+      font-family: var(--terminal-font);
+      color: var(--accent);
+      line-height: 1.1;
+      margin-bottom: 4px;
+      letter-spacing: 0.03em;
+    }
+
+    .score-summary-card.celebration-card .score-big {
+      color: var(--gold);
+    }
+
+    .score-percentage {
+      font-size: 13.5px;
+      font-family: var(--terminal-font);
+      font-weight: 700;
+      color: var(--text-muted);
+      letter-spacing: 0.05em;
+    }
+
+    /* Review list of all answers */
+    .review-list {
+      text-align: left;
+      margin-bottom: 20px;
+      max-height: 175px;
+      overflow-y: auto;
+      padding-right: 4px;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .review-item {
+      font-size: 12.5px;
+      padding: 8px 10px;
+      border-radius: 6px;
+      background: rgba(125, 125, 125, 0.08);
+      border: 1px solid var(--opt-border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+    }
+
+    .review-item-q {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      flex: 1;
+    }
+
+    .review-status-badge {
+      font-family: var(--terminal-font);
+      font-weight: 700;
+      font-size: 11.5px;
+      letter-spacing: 0.03em;
+    }
+
+    .restart-btn {
+      width: 100%;
+      background: var(--accent);
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px;
+      font-size: 14.5px;
+      font-weight: 700;
+      font-family: var(--terminal-font);
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      cursor: pointer;
+      box-shadow: 0 4px 14px var(--accent-glow);
+      transition: all 0.2s ease;
+    }
+
+    .restart-btn:hover {
+      opacity: 0.94;
+      transform: translateY(-1px);
+    }
+
+    /* Accessibility: Respect prefers-reduced-motion */
+    @media (prefers-reduced-motion: reduce) {
+      *,
+      *::before,
+      *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+        scroll-behavior: auto !important;
+      }
+      .brand-icon,
+      .status-dot,
+      .reaction-emoji,
+      .celebration-banner,
+      .badge-score.pop,
+      .option-btn.wrong,
+      .option-btn.correct {
+        animation: none !important;
+        transform: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Star-Field Canvas Background (Respects prefers-reduced-motion) -->
+  <canvas id="starsCanvas" aria-hidden="true"></canvas>
+
+  <!-- Celebratory Particle Canvas for Score >= 8 -->
+  <canvas id="celebrationCanvas" aria-hidden="true"></canvas>
+
+  <main class="quiz-container" role="main" aria-label="Space Exploration Quiz - Mission Control Console">
+    <!-- Corner HUD Brackets -->
+    <div class="hud-bracket-tr" aria-hidden="true"></div>
+    <div class="hud-bracket-bl" aria-hidden="true"></div>
+
+    <!-- Mission Control Telemetry Top Bar -->
+    <div class="telemetry-banner" aria-hidden="true">
+      <span class="telemetry-status">
+        <span class="status-dot"></span>SYS: NOMINAL // LIVE TELEMETRY
+      </span>
+      <span class="telemetry-code">FLIGHT CONSOLE [MCC-01]</span>
+    </div>
+
+    <!-- Quiz Header -->
+    <header class="quiz-header">
+      <div class="brand">
+        <div class="brand-icon" aria-hidden="true">🪐</div>
+        <div class="brand-meta">
+          <h1 class="brand-title">Cosmic Console</h1>
+          <span class="brand-subtitle">ORBITAL EXPLORATION QUIZ</span>
+        </div>
+      </div>
+      <button id="themeToggle" class="theme-toggle-btn" aria-label="Toggle dark/light theme" type="button">
+        <span id="themeIcon">🌓</span>
+        <span id="themeLabel">THEME</span>
+      </button>
+    </header>
+
+    <!-- Quiz View -->
+    <div id="quizView">
+      <!-- Top info bar with progress & score counter -->
+      <div class="stats-bar">
+        <span id="questionCount" class="badge-q-count">PHASE [01/10]</span>
+        <span id="scoreCounter" class="badge-score">
+          <span>✨ SCORE:</span>
+          <strong id="scoreValue">0 PTS</strong>
+        </span>
+      </div>
+
+      <!-- Animated High-Tech Progress Bar -->
+      <div class="progress-wrapper">
+        <div class="progress-track" role="progressbar" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100" aria-label="Mission Progress">
+          <div id="progressBar" class="progress-fill" style="width: 10%;"></div>
+        </div>
+        <div class="progress-ticks" aria-hidden="true">
+          <span>00%</span>
+          <span>25%</span>
+          <span>50%</span>
+          <span>75%</span>
+          <span>100%</span>
+        </div>
+      </div>
+
+      <!-- Question Text -->
+      <section class="question-section" aria-live="polite">
+        <div id="questionCategory" class="question-category">MISSION TOPIC</div>
+        <h2 id="questionText" class="question-text">Loading question...</h2>
+      </section>
+
+      <!-- Options Buttons -->
+      <div id="optionsContainer" class="options-grid" role="group" aria-label="Answer options">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <!-- Dynamic Feedback Banner & Explanation -->
+      <div id="feedbackBanner" class="feedback-banner" role="status" aria-live="polite">
+        <div id="feedbackTitle" class="feedback-header"></div>
+        <div id="feedbackExplanation" class="feedback-desc"></div>
+      </div>
+
+      <!-- Next Button -->
+      <div class="actions-row">
+        <button id="nextBtn" class="next-btn" type="button">NEXT PHASE →</button>
+      </div>
+    </div>
+
+    <!-- Results View -->
+    <div id="resultsView" class="results-screen" aria-live="polite">
+      <!-- Special Celebration Banner (shown when score >= 8) -->
+      <div id="celebrationBanner" class="celebration-banner" role="status">
+        <div class="celebration-badge-title">⭐ FLIGHT EXCELLENCE CITATION ⭐</div>
+        <div id="celebrationMessage" class="celebration-badge-desc">Mission Command awards you Chief Flight Honors!</div>
+      </div>
+
+      <div id="reactionEmoji" class="reaction-emoji" aria-hidden="true">🚀</div>
+      <h2 id="resultsTitle" class="results-title">Mission Debrief</h2>
+      <p id="resultsSubtitle" class="results-subtitle">Performance telemetry recorded.</p>
+
+      <div id="scoreSummaryCard" class="score-summary-card">
+        <div id="finalScore" class="score-big">0 / 10</div>
+        <div id="scorePercentage" class="score-percentage">0% ACCURACY</div>
+      </div>
+
+      <!-- Detailed Review Summary -->
+      <div id="reviewList" class="review-list" tabindex="0" aria-label="Question breakdown list">
+        <!-- Populated via JS -->
+      </div>
+
+      <button id="restartBtn" class="restart-btn" type="button">RELAUNCH MISSION 🚀</button>
+    </div>
+  </main>
+
+  <script>
+    // ==========================================
+    // STAR-FIELD BACKGROUND (Respects prefers-reduced-motion)
+    // ==========================================
+    const starsCanvas = document.getElementById("starsCanvas");
+    const starsCtx = starsCanvas.getContext("2d");
+    let stars = [];
+    const NUM_STARS = 95;
+    let starAnimationId = null;
+
+    function resizeStarsCanvas() {
+      starsCanvas.width = window.innerWidth;
+      starsCanvas.height = window.innerHeight;
+      initStars();
+    }
+
+    function isReducedMotion() {
+      return window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    }
+
+    function initStars() {
+      stars = [];
+      const w = starsCanvas.width;
+      const h = starsCanvas.height;
+      for (let i = 0; i < NUM_STARS; i++) {
+        stars.push({
+          x: Math.random() * w,
+          y: Math.random() * h,
+          radius: Math.random() * 1.5 + 0.4,
+          baseAlpha: Math.random() * 0.6 + 0.2,
+          alpha: Math.random() * 0.6 + 0.2,
+          speed: Math.random() * 0.015 + 0.005,
+          twinkleFactor: Math.random() * Math.PI,
+          driftX: (Math.random() - 0.5) * 0.15,
+          driftY: (Math.random() - 0.5) * 0.15,
+          colorType: Math.random() > 0.3 ? "cyan" : (Math.random() > 0.5 ? "white" : "purple")
+        });
+      }
+      renderStars();
+    }
+
+    function renderStars() {
+      const isDark = !document.body.classList.contains("theme-light") && 
+        (document.body.classList.contains("theme-dark") || window.matchMedia("(prefers-color-scheme: dark)").matches);
+
+      starsCtx.clearRect(0, 0, starsCanvas.width, starsCanvas.height);
+
+      for (let s of stars) {
+        starsCtx.beginPath();
+        starsCtx.arc(s.x, s.y, s.radius, 0, Math.PI * 2);
+
+        let color = isDark
+          ? (s.colorType === "cyan" ? "rgba(56, 189, 248, " + s.alpha + ")" : s.colorType === "purple" ? "rgba(192, 132, 252, " + s.alpha + ")" : "rgba(255, 255, 255, " + s.alpha + ")")
+          : (s.colorType === "cyan" ? "rgba(3, 105, 161, " + (s.alpha * 0.7) + ")" : "rgba(71, 85, 105, " + (s.alpha * 0.6) + ")");
+
+        starsCtx.fillStyle = color;
+        starsCtx.fill();
+      }
+    }
+
+    function updateStars() {
+      if (isReducedMotion()) {
+        renderStars();
+        return;
+      }
+
+      const w = starsCanvas.width;
+      const h = starsCanvas.height;
+
+      for (let s of stars) {
+        s.twinkleFactor += s.speed;
+        s.alpha = s.baseAlpha + Math.sin(s.twinkleFactor) * 0.25;
+        if (s.alpha < 0.1) s.alpha = 0.1;
+        if (s.alpha > 0.95) s.alpha = 0.95;
+
+        s.x += s.driftX;
+        s.y += s.driftY;
+        if (s.x < 0) s.x = w;
+        if (s.x > w) s.x = 0;
+        if (s.y < 0) s.y = h;
+        if (s.y > h) s.y = 0;
+      }
+
+      renderStars();
+      starAnimationId = requestAnimationFrame(updateStars);
+    }
+
+    window.addEventListener("resize", resizeStarsCanvas);
+    resizeStarsCanvas();
+    if (!isReducedMotion()) {
+      starAnimationId = requestAnimationFrame(updateStars);
+    }
+
+    // ==========================================
+    // CELEBRATION CONFETTI (Score >= 8)
+    // ==========================================
+    const celebrationCanvas = document.getElementById("celebrationCanvas");
+    const celCtx = celebrationCanvas.getContext("2d");
+    let confettiParticles = [];
+    let celAnimationId = null;
+
+    function resizeCelebrationCanvas() {
+      celebrationCanvas.width = window.innerWidth;
+      celebrationCanvas.height = window.innerHeight;
+    }
+    window.addEventListener("resize", resizeCelebrationCanvas);
+    resizeCelebrationCanvas();
+
+    function launchCelebration() {
+      if (isReducedMotion()) return;
+
+      celebrationCanvas.style.display = "block";
+      confettiParticles = [];
+      const colors = ["#fbbf24", "#38bdf8", "#34d399", "#f43f5e", "#a855f7", "#ffffff"];
+      const count = 120;
+
+      for (let i = 0; i < count; i++) {
+        confettiParticles.push({
+          x: window.innerWidth / 2 + (Math.random() - 0.5) * 160,
+          y: window.innerHeight * 0.45,
+          vx: (Math.random() - 0.5) * 16,
+          vy: Math.random() * -14 - 4,
+          gravity: 0.35,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          rotation: Math.random() * 360,
+          rotationSpeed: (Math.random() - 0.5) * 10,
+          opacity: 1,
+          shape: Math.random() > 0.5 ? "rect" : "star"
+        });
+      }
+
+      cancelAnimationFrame(celAnimationId);
+      animateCelebration();
+    }
+
+    function animateCelebration() {
+      celCtx.clearRect(0, 0, celebrationCanvas.width, celebrationCanvas.height);
+      let alive = false;
+
+      for (let p of confettiParticles) {
+        p.vy += p.gravity;
+        p.x += p.vx;
+        p.y += p.vy;
+        p.rotation += p.rotationSpeed;
+        p.opacity -= 0.007;
+
+        if (p.opacity > 0 && p.y < celebrationCanvas.height + 20) {
+          alive = true;
+          celCtx.save();
+          celCtx.translate(p.x, p.y);
+          celCtx.rotate((p.rotation * Math.PI) / 180);
+          celCtx.globalAlpha = Math.max(0, p.opacity);
+          celCtx.fillStyle = p.color;
+
+          if (p.shape === "rect") {
+            celCtx.fillRect(-p.size / 2, -p.size / 4, p.size, p.size / 2);
+          } else {
+            celCtx.beginPath();
+            for (let i = 0; i < 5; i++) {
+              celCtx.lineTo(Math.cos((18 + i * 72) * 0.01745) * p.size, -Math.sin((18 + i * 72) * 0.01745) * p.size);
+              celCtx.lineTo(Math.cos((54 + i * 72) * 0.01745) * (p.size / 2), -Math.sin((54 + i * 72) * 0.01745) * (p.size / 2));
+            }
+            celCtx.closePath();
+            celCtx.fill();
+          }
+          celCtx.restore();
+        }
+      }
+
+      if (alive) {
+        celAnimationId = requestAnimationFrame(animateCelebration);
+      } else {
+        celebrationCanvas.style.display = "none";
+      }
+    }
+
+    // ==========================================
+    // 10 SPACE EXPLORATION QUESTIONS
+    // ==========================================
+    const questions = [
+      {
+        category: "Human Spaceflight",
+        question: "Who was the first person to travel into space?",
+        options: ["Yuri Gagarin", "Neil Armstrong", "John Glenn", "Alan Shepard"],
+        answer: 0,
+        explanation: "Yuri Gagarin orbited Earth aboard Vostok 1 on April 12, 1961."
+      },
+      {
+        category: "Lunar Exploration",
+        question: "Which Apollo mission first landed humans on the Moon?",
+        options: ["Apollo 8", "Apollo 11", "Apollo 13", "Apollo 17"],
+        answer: 1,
+        explanation: "Neil Armstrong & Buzz Aldrin landed Apollo 11's Eagle module on July 20, 1969."
+      },
+      {
+        category: "Space Telescopes",
+        question: "Which telescope launched on Christmas Day 2021 to succeed Hubble?",
+        options: ["James Webb Space Telescope", "Spitzer Telescope", "Kepler Observatory", "Chandra Observatory"],
+        answer: 0,
+        explanation: "The James Webb Space Telescope (JWST) observes the early cosmos in infrared."
+      },
+      {
+        category: "The Space Race",
+        question: "What was the world's first artificial satellite launched into orbit?",
+        options: ["Explorer 1", "Vanguard 1", "Sputnik 1", "Telstar 1"],
+        answer: 2,
+        explanation: "Sputnik 1 was launched by the Soviet Union on October 4, 1957, igniting the Space Race."
+      },
+      {
+        category: "Mars Missions",
+        question: "Which Mars rover famously carried the Ingenuity helicopter?",
+        options: ["Curiosity", "Opportunity", "Spirit", "Perseverance"],
+        answer: 3,
+        explanation: "Perseverance landed in Jezero Crater in 2021 with the Ingenuity aerial drone."
+      },
+      {
+        category: "Deep Space",
+        question: "What is currently the farthest human-made object from Earth?",
+        options: ["Voyager 1", "Voyager 2", "New Horizons", "Pioneer 10"],
+        answer: 0,
+        explanation: "Voyager 1, launched in 1977, is cruising through interstellar space over 15 billion miles away."
+      },
+      {
+        category: "Pioneers",
+        question: "Who was the first woman to fly in space?",
+        options: ["Sally Ride", "Valentina Tereshkova", "Mae Jemison", "Svetlana Savitskaya"],
+        answer: 1,
+        explanation: "Soviet cosmonaut Valentina Tereshkova flew solo aboard Vostok 6 in June 1963."
+      },
+      {
+        category: "Solar System",
+        question: "Which planet in our solar system has the most confirmed moons?",
+        options: ["Jupiter", "Saturn", "Uranus", "Neptune"],
+        answer: 1,
+        explanation: "Saturn leads our Solar System with 146 confirmed moons, ahead of Jupiter's 95."
+      },
+      {
+        category: "Future Missions",
+        question: "NASA's Artemis program aims to return astronauts to which celestial body?",
+        options: ["Mars", "The Moon", "Europa", "Titan"],
+        answer: 1,
+        explanation: "Artemis plans to build a sustainable human presence on the Moon as a stepping stone to Mars."
+      },
+      {
+        category: "Orbital Mechanics",
+        question: "Roughly at what speed does the International Space Station orbit Earth?",
+        options: ["5,000 km/h (3,100 mph)", "12,000 km/h (7,500 mph)", "28,000 km/h (17,500 mph)", "45,000 km/h (28,000 mph)"],
+        answer: 2,
+        explanation: "The ISS orbits Earth every 90 minutes at approximately 28,000 km/h (17,500 mph)."
+      }
+    ];
+
+    // Quiz State
+    let currentIdx = 0;
+    let score = 0;
+    let answered = false;
+    let autoAdvanceTimer = null;
+    const userAnswers = [];
+
+    // DOM Elements
+    const quizView = document.getElementById("quizView");
+    const resultsView = document.getElementById("resultsView");
+    const questionCountEl = document.getElementById("questionCount");
+    const scoreValueEl = document.getElementById("scoreValue");
+    const scoreCounterEl = document.getElementById("scoreCounter");
+    const progressBar = document.getElementById("progressBar");
+    const questionCategoryEl = document.getElementById("questionCategory");
+    const questionTextEl = document.getElementById("questionText");
+    const optionsContainer = document.getElementById("optionsContainer");
+    const feedbackBanner = document.getElementById("feedbackBanner");
+    const feedbackTitle = document.getElementById("feedbackTitle");
+    const feedbackExplanation = document.getElementById("feedbackExplanation");
+    const nextBtn = document.getElementById("nextBtn");
+    const restartBtn = document.getElementById("restartBtn");
+    const finalScoreEl = document.getElementById("finalScore");
+    const scorePercentageEl = document.getElementById("scorePercentage");
+    const scoreSummaryCard = document.getElementById("scoreSummaryCard");
+    const celebrationBanner = document.getElementById("celebrationBanner");
+    const celebrationMessage = document.getElementById("celebrationMessage");
+    const reactionEmojiEl = document.getElementById("reactionEmoji");
+    const resultsTitleEl = document.getElementById("resultsTitle");
+    const resultsSubtitleEl = document.getElementById("resultsSubtitle");
+    const reviewListEl = document.getElementById("reviewList");
+    const themeToggleBtn = document.getElementById("themeToggle");
+
+    const letters = ["A", "B", "C", "D"];
+
+    // Initialize Quiz
+    function initQuiz() {
+      currentIdx = 0;
+      score = 0;
+      userAnswers.length = 0;
+      scoreValueEl.textContent = "0 PTS";
+      quizView.style.display = "block";
+      resultsView.style.display = "none";
+      celebrationBanner.style.display = "none";
+      celebrationCanvas.style.display = "none";
+      scoreSummaryCard.classList.remove("celebration-card");
+      loadQuestion(currentIdx);
+    }
+
+    // Load Single Question
+    function loadQuestion(index) {
+      answered = false;
+      clearTimeout(autoAdvanceTimer);
+      feedbackBanner.className = "feedback-banner";
+      feedbackBanner.style.display = "none";
+      nextBtn.style.display = "none";
+
+      const q = questions[index];
+      const progressPercent = ((index + 1) / questions.length) * 100;
+
+      // Update UI Header & Progress
+      questionCountEl.textContent = "PHASE [" + String(index + 1).padStart(2, "0") + "/" + questions.length + "]";
+      progressBar.style.width = progressPercent + "%";
+      progressBar.parentElement.setAttribute("aria-valuenow", progressPercent);
+      questionCategoryEl.textContent = "// MISSION TOPIC: " + q.category;
+      questionTextEl.textContent = q.question;
+
+      // Render Options
+      optionsContainer.innerHTML = "";
+      q.options.forEach((optText, optIdx) => {
+        const btn = document.createElement("button");
+        btn.type = "button";
+        btn.className = "option-btn";
+        btn.setAttribute("role", "button");
+        btn.setAttribute("tabindex", "0");
+        btn.setAttribute("aria-label", "Option " + letters[optIdx] + ": " + optText);
+
+        btn.innerHTML = `
+          <div class="option-content">
+            <span class="option-letter">[${letters[optIdx]}]</span>
+            <span class="option-text">${optText}</span>
+          </div>
+          <span class="option-indicator" aria-hidden="true"></span>
+        `;
+
+        btn.addEventListener("click", () => handleSelectOption(optIdx, btn));
+
+        // Keyboard arrow navigation support
+        btn.addEventListener("keydown", (e) => {
+          if (e.key === "ArrowDown") {
+            e.preventDefault();
+            const next = btn.nextElementSibling || optionsContainer.firstElementChild;
+            if (next) next.focus();
+          } else if (e.key === "ArrowUp") {
+            e.preventDefault();
+            const prev = btn.previousElementSibling || optionsContainer.lastElementChild;
+            if (prev) prev.focus();
+          }
+        });
+
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    // Handle Option Selection
+    function handleSelectOption(selectedIdx, selectedBtn) {
+      if (answered) return;
+      answered = true;
+
+      const q = questions[currentIdx];
+      const isCorrect = selectedIdx === q.answer;
+      userAnswers.push({
+        question: q.question,
+        isCorrect: isCorrect,
+        chosen: q.options[selectedIdx],
+        correct: q.options[q.answer]
+      });
+
+      // Disable all options
+      const allButtons = optionsContainer.querySelectorAll(".option-btn");
+      allButtons.forEach(btn => btn.disabled = true);
+
+      // Animate selection
+      if (isCorrect) {
+        selectedBtn.classList.add("correct");
+        selectedBtn.querySelector(".option-indicator").textContent = "[OK ✓]";
+        score++;
+        scoreValueEl.textContent = (score * 10) + " PTS";
+
+        scoreCounterEl.classList.remove("pop");
+        void scoreCounterEl.offsetWidth; // trigger reflow
+        scoreCounterEl.classList.add("pop");
+
+        feedbackTitle.innerHTML = "<span>🚀 TRAJECTORY NOMINAL // CORRECT</span>";
+        feedbackExplanation.textContent = q.explanation;
+        feedbackBanner.className = "feedback-banner correct-banner";
+        feedbackBanner.style.display = "block";
+      } else {
+        selectedBtn.classList.add("wrong");
+        selectedBtn.querySelector(".option-indicator").textContent = "[ERR ✗]";
+
+        const correctBtn = allButtons[q.answer];
+        if (correctBtn) {
+          correctBtn.classList.add("correct");
+          correctBtn.querySelector(".option-indicator").textContent = "[CORRECT ✓]";
+        }
+
+        feedbackTitle.innerHTML = "<span>☄️ ANOMALY DETECTED // MISSED</span>";
+        feedbackExplanation.textContent = q.explanation;
+        feedbackBanner.className = "feedback-banner wrong-banner";
+        feedbackBanner.style.display = "block";
+      }
+
+      // Show Next button and immediately focus it for seamless keyboard advancing
+      nextBtn.style.display = "inline-block";
+      nextBtn.focus();
+
+      // Automatically advance after 2.4s if not clicked/pressed
+      autoAdvanceTimer = setTimeout(() => {
+        advanceQuestion();
+      }, 2400);
+    }
+
+    function advanceQuestion() {
+      clearTimeout(autoAdvanceTimer);
+      if (currentIdx + 1 < questions.length) {
+        currentIdx++;
+        loadQuestion(currentIdx);
+        setTimeout(() => {
+          const firstOpt = optionsContainer.querySelector(".option-btn");
+          if (firstOpt) firstOpt.focus();
+        }, 50);
+      } else {
+        showResults();
+      }
+    }
+
+    // Results Screen with Special Celebration when score >= 8
+    function showResults() {
+      quizView.style.display = "none";
+      resultsView.style.display = "block";
+
+      const percentage = Math.round((score / questions.length) * 100);
+      finalScoreEl.textContent = score + " / " + questions.length;
+      scorePercentageEl.textContent = percentage + "% ACCURACY (" + (score * 10) + " POINTS)";
+
+      let emoji = "🚀";
+      let title = "MISSION DEBRIEF: COMPLETE";
+      let subtitle = "Flight telemetry evaluated.";
+
+      if (score === 10) {
+        emoji = "👑👨‍🚀";
+        title = "GALACTIC MASTER";
+        subtitle = "FLIGHT PERFECTION: All orbital parameters nominal!";
+        celebrationMessage.textContent = "Flawless score! Commander rank officially conferred by Mission Control.";
+      } else if (score >= 8) {
+        emoji = "🚀✨";
+        title = "CHIEF FLIGHT COMMANDER";
+        subtitle = "OUTSTANDING FLIGHT LOG: Exceptional astronomical mastery!";
+        celebrationMessage.textContent = "Distinguished performance! You earned the Golden Astrogation Medal.";
+      } else if (score >= 6) {
+        emoji = "🛰️🌍";
+        title = "ORBITAL EXPLORER";
+        subtitle = "Solid navigation across the planetary frontier.";
+      } else if (score >= 4) {
+        emoji = "🪐🔭";
+        title = "JUNIOR OBSERVER";
+        subtitle = "Telemetry indicates further simulation runs recommended.";
+      } else {
+        emoji = "☄️🛸";
+        title = "CADET RE-TRAINING REQUIRED";
+        subtitle = "Review planetary charts and relaunch flight sequence.";
+      }
+
+      reactionEmojiEl.textContent = emoji;
+      resultsTitleEl.textContent = title;
+      resultsSubtitleEl.textContent = subtitle;
+
+      // Celebrate if score >= 8!
+      if (score >= 8) {
+        celebrationBanner.style.display = "block";
+        scoreSummaryCard.classList.add("celebration-card");
+        launchCelebration();
+      } else {
+        celebrationBanner.style.display = "none";
+        scoreSummaryCard.classList.remove("celebration-card");
+      }
+
+      // Populate review breakdown
+      reviewListEl.innerHTML = "";
+      userAnswers.forEach((item, i) => {
+        const div = document.createElement("div");
+        div.className = "review-item";
+        div.innerHTML = `
+          <span class="review-item-q">[T+${i + 1}] ${item.question}</span>
+          <span class="review-status-badge" style="color: ${item.isCorrect ? 'var(--correct-border)' : 'var(--wrong-border)'}">
+            ${item.isCorrect ? '✓ NOMINAL' : '✗ ANOMALY'}
+          </span>
+        `;
+        reviewListEl.appendChild(div);
+      });
+
+      // Move keyboard focus directly to Restart button
+      restartBtn.focus();
+    }
+
+    // Next & Restart Listeners
+    nextBtn.addEventListener("click", () => {
+      advanceQuestion();
+    });
+
+    restartBtn.addEventListener("click", () => {
+      initQuiz();
+    });
+
+    // Theme toggle
+    themeToggleBtn.addEventListener("click", () => {
+      const isSystemDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+      if (document.body.classList.contains("theme-light")) {
+        document.body.classList.remove("theme-light");
+        document.body.classList.add("theme-dark");
+      } else if (document.body.classList.contains("theme-dark")) {
+        document.body.classList.remove("theme-dark");
+        document.body.classList.add("theme-light");
+      } else {
+        if (isSystemDark) {
+          document.body.classList.add("theme-light");
+        } else {
+          document.body.classList.add("theme-dark");
+        }
+      }
+      renderStars();
+    });
+
+    // Start on load
+    initQuiz();
+  </script>
+</body>
+</html>
